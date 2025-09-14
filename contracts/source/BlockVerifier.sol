@@ -2,7 +2,8 @@
 pragma solidity ^0.8.0;
 
 library BlockVerifier {
-	function extractStateRootAndTimestamp(bytes memory rlpBytes) internal view returns (bytes32 stateRoot, uint256 blockTimestamp, uint256 blockNumber) {
+	/// @dev blockhash(blockNumber) == keccak256(rlpBytes) condition must be verified by caller
+	function extractStateRootAndTimestamp(bytes memory rlpBytes) internal pure returns (bytes32 stateRoot, uint256 blockTimestamp, uint256 blockNumber) {
 		assembly {
 			function revertWithReason(message, length) {
 				mstore(0, 0x08c379a000000000000000000000000000000000000000000000000000000000)
@@ -58,9 +59,9 @@ library BlockVerifier {
 			let timestampPointer, timestampLength := readDynamic(timestampPrefixPointer)
 
 			blockNumber := shr(sub(256, mul(blockNumberLength, 8)), mload(blockNumberPointer))
-			let blockHash := blockhash(blockNumber)
-			let rlpHash := keccak256(rlpBytes, rlpLength)
-			if iszero(eq(blockHash, rlpHash)) { revertWithReason("blockHash != rlpHash", 20) }
+			// let blockHash := blockhash(blockNumber)
+			// let rlpHash := keccak256(rlpBytes, rlpLength)
+			// if iszero(eq(blockHash, rlpHash)) { revertWithReason("blockHash != rlpHash", 20) }
 
 			stateRoot := mload(stateRootPointer)
 			blockTimestamp := shr(sub(256, mul(timestampLength, 8)), mload(timestampPointer))
