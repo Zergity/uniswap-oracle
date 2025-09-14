@@ -1,4 +1,4 @@
-pragma solidity 0.8.11;
+pragma solidity ^0.8.0;
 
 import { BlockVerifier } from "@keydonix/BlockVerifier.sol";
 import { MerklePatriciaVerifier } from "@keydonix/MerklePatriciaVerifier.sol";
